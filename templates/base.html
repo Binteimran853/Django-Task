@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title%} E-Commerce {% endblock %}</title>
 </head>
 <body>
-<h1>Base </h1>
+<h1>E-Commerce</h1>
+<nav>
+    <a href="{% url 'sign-up' %}">Sign up</a> |
+    <a href="{% url 'login' %}">Login</a> |
+    <a href="{% url 'edit-profile' %}">Edit Profile</a>
+</nav>
+<br>
+{% block content %}
+
+{% endblock %}
 </body>
 </html>

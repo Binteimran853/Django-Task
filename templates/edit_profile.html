@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Edit Profile Here</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %} Edit Profile {% endblock%}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label for="username">User Name:</label>
+    <input id="username" type="text" name="username" required>
+    <br><br>
+
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required>
+    <br><br>
+
+    <button type="submit">Update</button>
+
+</form>
+
+{% endblock %}

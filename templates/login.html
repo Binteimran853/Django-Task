@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Login Here</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %} Login Here {% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label for="username">User Name:</label>
+    <input id="username" type="text" name="username" required>
+    <br><br>
+
+    <label for="password">Password:</label>
+    <input id="password" type="password" name="password" required >
+    <br><br>
+
+    <button type="submit"> Login</button>
+
+</form>
+
+{% endblock%}
