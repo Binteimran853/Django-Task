@@ -9,9 +9,12 @@
 <h1>E-Commerce</h1>
 <nav>
     <a href="{% url 'sign-up' %}">Sign up</a> |
-    <a href="{% url 'login' %}">Login</a> |
+    {% if user.is_authenticated %}
+        <a href="{% url 'edit-profile' %}">Edit Profile</a> |
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> |
+    {% endif %}
     <a href="{% url 'logout' %}">Log Out</a> |
-    <a href="{% url 'edit-profile' %}">Edit Profile</a>
 </nav>
 <br>
 {% block content %}

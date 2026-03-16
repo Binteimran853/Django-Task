@@ -6,7 +6,9 @@ from .models import User
 
 
 def home(request):
-    return render(request, 'base.html')
+    user = User.objects.get(id=request.user.id)
+    return render(request, 'base.html', {'user': user})
+
 
 def user_register(request):
     if request.method == 'POST':
@@ -20,6 +22,7 @@ def user_register(request):
     else:
         form = UserForm()
         return render(request, 'signup.html', {'form': form})
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -40,9 +43,11 @@ def user_login(request):
                             'form': form
                         })
         return render(request, 'signup.html', {'form': form})
+
     else:
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
+
 
 def user_logout(request):
     logout(request)
@@ -50,16 +55,30 @@ def user_logout(request):
 
 
 class EditProfile(View):
-    def get(self, request):
-        if request.method == 'GET':
-            user = User.objects.get(id=request.session['user_id'])
-            print(user)
+    @staticmethod
+    def get(request):
+        if request.user.is_authenticated:
+            user = User.objects.get(id=request.user.id)
+            print(user.username)
             return render(request, 'edit_profile.html', {
                 'user': user
             })
         else:
-            form = UserForm(request.POST, instance=request.user)
-            if form.is_valid():
-                form.save()
-                return redirect('home')
-            return render(request, 'edit_profile.html', {'form': form})
+            print('user not logged in')
+            return redirect('login')
+
+    @staticmethod
+    def post(request):
+        if request.user.is_authenticated:
+            user = User.objects.get(id=request.user.id)
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            user.username = username
+            user.email = email
+            user.save()
+            return redirect('home')
+        else:
+            error_message = 'user not logged in'
+            return render(request, 'edit_profile.html', {
+                'error_message': error_message
+            })

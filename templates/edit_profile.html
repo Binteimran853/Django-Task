@@ -4,10 +4,13 @@
 
 {% block content %}
 
-<form method="GET">
+<form method="POST">
     {% csrf_token %}
-
-{{user.as_p}}
+    {{user.label}}
+    <input type="text" value="{{ user.username}}"  name="username" />
+    <input type="text" value="{{ user.email}}" name="email"/>
+    <button type="submit" class="btn btn-secondary"> Update</button>
 </form>
+
 
 {% endblock %}
