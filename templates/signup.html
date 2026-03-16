@@ -7,19 +7,26 @@
 <form method="POST">
     {% csrf_token %}
 
-    <label for="username">User Name:</label>
-    <input id="username" type="text" name="username" required>
-    <br><br>
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        {{ form.username }}
+    </div>
 
-    <label for="email" >Email:</label>
-    <input id="email" type="email" name="email" required >
-    <br><br>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        {{ form.email }}
+    </div>
 
-    <label for="password" >password:</label>
-    <input id="password" type="password" name="password" required >
-    <br><br>
-
-    <button type="submit"> Sign Up</button>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        {{ form.password }}
+    </div>
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+    <button type="submit" class="btn btn-primary"> Sign Up</button>
 
 </form>
 
