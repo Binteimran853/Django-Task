@@ -1,12 +1,15 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 from .forms import UserForm, LoginForm
 from .models import User
 
 
 def home(request):
-    user = User.objects.get(id=request.user.id)
+    user = request.user
     return render(request, 'base.html', {'user': user})
 
 
@@ -54,31 +57,26 @@ def user_logout(request):
     return redirect('login')
 
 
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class EditProfile(View):
+
     @staticmethod
     def get(request):
-        if request.user.is_authenticated:
-            user = User.objects.get(id=request.user.id)
-            print(user.username)
-            return render(request, 'edit_profile.html', {
-                'user': user
-            })
-        else:
-            print('user not logged in')
-            return redirect('login')
+        user = request.user
+        form = UserForm(instance=user)  # <-- pass the user instance
+        return render(request, 'edit_profile.html', {
+            'form': form,
+            'user': user
+        })
 
     @staticmethod
     def post(request):
-        if request.user.is_authenticated:
-            user = User.objects.get(id=request.user.id)
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            user.username = username
-            user.email = email
-            user.save()
+        user = request.user
+        form = UserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
             return redirect('home')
-        else:
-            error_message = 'user not logged in'
-            return render(request, 'edit_profile.html', {
-                'error_message': error_message
-            })
+        return render(request, 'edit_profile.html', {
+            'form': form,
+            'user': user
+        })

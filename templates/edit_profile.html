@@ -4,13 +4,67 @@
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{user.label}}
-    <input type="text" value="{{ user.username}}"  name="username" />
-    <input type="text" value="{{ user.email}}" name="email"/>
+
+    <div class="mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.phone.label_tag }}
+        {{ form.phone }}
+        {{ form.phone.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+        {{ form.address.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.profile_image.label_tag }}
+        {% if user.profile_image %}
+            <img
+                    id="profileImage"
+                    src="{{ user.profile_image.url }}"
+                    width="100"
+                    height="100"
+                    style="cursor:pointer;border-radius:50%;"
+            >
+        {% endif %}
+        {{ form.profile_image }}
+        {{ form.profile_image.errors }}
+    </div>
+
     <button type="submit" class="btn btn-secondary"> Update</button>
 </form>
 
+<script>
+    const profileImg = document.getElementById('profileImage');
+    const profileInput = document.getElementById('{{ form.profile_image.id_for_label }}');
+
+    if (profileImg && profileInput) {
+        profileImg.addEventListener('click', () => {
+            profileInput.click();
+        });
+
+        profileInput.addEventListener('change', (event) => {
+            const [file] = event.target.files;
+            if (file) {
+                profileImg.src = URL.createObjectURL(file);
+            }
+        });
+    }
+</script>
 
 {% endblock %}

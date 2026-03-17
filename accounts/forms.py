@@ -8,7 +8,15 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'profile_image', 'address', 'phone']
+        labels = {
+            'Username' : 'username',
+            'Email' : 'email',
+            'Password' : 'password',
+            'Profile image' : 'profile_image',
+            'Address' : 'address',
+            'Phone Number' : 'phone',
+        }
 
 
     def clean(self):
@@ -31,3 +39,16 @@ class UserForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model : User
+        fields = ['username', 'email', 'profile_image', 'address', 'phone']
+        # labels = {
+        #     'Username' : 'username',
+        #     'Email' : 'email',
+        #     'Profile image' : 'profile_image',
+        #     'Address' : 'address',
+        #     'Phone Number' : 'phone',
+        # }
