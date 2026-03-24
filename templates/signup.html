@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="mb-3">
@@ -37,13 +37,17 @@
         {{ form.profile_image }}
     </div>
 
-        {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-            <p class="text-danger">{{ error }}</p>
-        {% endfor %}
-        {% endif %}
+<!--        {% if form.non_field_errors %}-->
+<!--        {% for error in form.non_field_errors %}-->
+<!--            <p class="text-danger">{{ error }}</p>-->
+<!--        {% endfor %}-->
+<!--        {% endif %}-->
     <button type="submit" class="btn btn-primary"> Sign Up</button>
 
 </form>
-
+{% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+{% endif %}
 {% endblock %}

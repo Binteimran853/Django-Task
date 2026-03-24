@@ -17,6 +17,11 @@ class UserForm(forms.ModelForm):
             'Address' : 'address',
             'Phone Number' : 'phone',
         }
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
 
 
     def clean(self):
@@ -43,12 +48,28 @@ class LoginForm(forms.Form):
 
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model : User
+        model = User
         fields = ['username', 'email', 'profile_image', 'address', 'phone']
-        # labels = {
-        #     'Username' : 'username',
-        #     'Email' : 'email',
-        #     'Profile image' : 'profile_image',
-        #     'Address' : 'address',
-        #     'Phone Number' : 'phone',
-        # }
+
+        widgets = {
+            'profile_image': forms.FileInput(attrs={'class': 'd-none'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+
+        user_id = self.instance.id
+
+        if User.objects.exclude(id=user_id).filter(username=username).exists():
+            raise ValidationError("Username already taken")
+
+        if User.objects.exclude(id=user_id).filter(email=email).exists():
+            raise ValidationError("Email already registered")
+
+        return cleaned_data

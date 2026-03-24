@@ -4,22 +4,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from .forms import UserForm, LoginForm
-from .models import User
-
-
-def home(request):
-    user = request.user
-    return render(request, 'base.html', {'user': user})
+from .forms import UserForm, LoginForm, ProfileForm
 
 
 def user_register(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
-
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('login')
+
         return render(request, 'signup.html', {'form': form})
 
     else:
@@ -63,7 +57,7 @@ class EditProfile(View):
     @staticmethod
     def get(request):
         user = request.user
-        form = UserForm(instance=user)  # <-- pass the user instance
+        form = ProfileForm(instance=user)
         return render(request, 'edit_profile.html', {
             'form': form,
             'user': user
@@ -72,10 +66,12 @@ class EditProfile(View):
     @staticmethod
     def post(request):
         user = request.user
-        form = UserForm(request.POST, request.FILES, instance=user)
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+
         if form.is_valid():
             form.save()
             return redirect('home')
+
         return render(request, 'edit_profile.html', {
             'form': form,
             'user': user

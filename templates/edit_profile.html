@@ -1,70 +1,83 @@
 {% extends "base.html" %}
-
-{% block title %} Edit Profile {% endblock%}
+{% block title %} Edit Profile {% endblock %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h4 class="mb-0">Edit Profile</h4>
+                </div>
 
-    <div class="mb-3">
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {{ form.username.errors }}
+                <div class="card-body p-4">
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="text-center mb-4">
+                            <label for="{{ form.profile_image.id_for_label }}">
+                                <img id="profileImage"
+                                        src="{{ user.profile_image.url }}?{{ user.id }}"
+                                        class="rounded-circle shadow"
+                                        width="120" height="120"
+                                        style="cursor:pointer; object-fit:cover;">
+                            </label>
+
+                            {{ form.profile_image }}
+
+                            <small class="text-muted d-block mt-2">
+                                Click image to change
+                            </small>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form.username }}
+                            <label>Username</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form.email }}
+                            <label>Email</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form.phone }}
+                            <label>Phone</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            {{ form.address }}
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg rounded-3">
+                                Update Profile
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        {{ form.email.errors }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.phone.label_tag }}
-        {{ form.phone }}
-        {{ form.phone.errors }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.address.label_tag }}
-        {{ form.address }}
-        {{ form.address.errors }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.profile_image.label_tag }}
-        {% if user.profile_image %}
-            <img
-                    id="profileImage"
-                    src="{{ user.profile_image.url }}"
-                    width="100"
-                    height="100"
-                    style="cursor:pointer;border-radius:50%;"
-            >
-        {% endif %}
-        {{ form.profile_image }}
-        {{ form.profile_image.errors }}
-    </div>
-
-    <button type="submit" class="btn btn-secondary"> Update</button>
-</form>
+</div>
 
 <script>
-    const profileImg = document.getElementById('profileImage');
     const profileInput = document.getElementById('{{ form.profile_image.id_for_label }}');
+const profileImg = document.getElementById('profileImage');
 
-    if (profileImg && profileInput) {
-        profileImg.addEventListener('click', () => {
-            profileInput.click();
-        });
-
-        profileInput.addEventListener('change', (event) => {
-            const [file] = event.target.files;
-            if (file) {
-                profileImg.src = URL.createObjectURL(file);
-            }
-        });
-    }
+if (profileInput) {
+    profileInput.addEventListener('change', (event) => {
+        const [file] = event.target.files;
+        if (file) {
+            profileImg.src = URL.createObjectURL(file);
+        }
+    });
+}
 </script>
-
 {% endblock %}
