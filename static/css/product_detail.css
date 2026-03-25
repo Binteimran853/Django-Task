@@ -1,0 +1,15 @@
+
+.product-img {
+    height: 18rem;
+    width: 100%;
+    object-fit: cover;
+    background: #f8f9fa;
+
+}
+    .card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}

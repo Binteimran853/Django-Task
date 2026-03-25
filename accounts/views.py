@@ -54,8 +54,7 @@ def user_logout(request):
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class EditProfile(View):
 
-    @staticmethod
-    def get(request):
+    def get(self, request):
         user = request.user
         form = ProfileForm(instance=user)
         return render(request, 'edit_profile.html', {
@@ -63,8 +62,7 @@ class EditProfile(View):
             'user': user
         })
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         user = request.user
         form = ProfileForm(request.POST, request.FILES, instance=user)
 
