@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'products',
-    'cart'
+    'cart',
+    'widget_tweaks',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

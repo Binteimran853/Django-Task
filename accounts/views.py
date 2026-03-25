@@ -11,14 +11,16 @@ def user_register(request):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('login')
-
-        return render(request, 'signup.html', {'form': form})
-
+            user = form.save()
+            login(request, user)
+            next_url = request.GET.get('next')
+            print(next_url)
+            if next_url:
+                return redirect(next_url)
+            return redirect('home')
     else:
         form = UserForm()
-        return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
 
 
 def user_login(request):
@@ -31,16 +33,16 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
                 return redirect('home')
             else:
-                form = LoginForm()
-                error_message = 'user not registered, sign up first'
+                form.add_error(None, 'Invalid username or password.')
                 return render(request, 'login.html', {
-                            'error_message': error_message,
                             'form': form
                         })
-        return render(request, 'signup.html', {'form': form})
-
     else:
         form = LoginForm()
         return render(request, 'login.html', {'form': form})

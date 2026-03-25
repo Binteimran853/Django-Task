@@ -1,53 +1,83 @@
 {% extends "base.html" %}
 
-{%block title %} Sign-Up Here {% endblock %}
+{% block title %} Sign-Up Here {% endblock %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+                    <h4 class="mb-0">Create Your Account</h4>
+                </div>
 
-    <div class="mb-3">
-        {{form.username.label_tag}}
-        {{ form.username }}
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST" enctype="multipart/form-data" action="{{ request.get_full_path }}">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 px-3 small mb-4">
+                            {{ form.non_field_errors|first }}
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-dark small uppercase">{{ form.username.label }}</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors|first }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-dark small">{{ form.email.label }}</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors|first }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small">{{ form.password.label }}</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="text-danger small mt-1">{{ form.password.errors|first }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small">{{ form.address.label }}</label>
+                            {{ form.address }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-dark small">{{ form.phone.label }}</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger small mt-1">{{ form.phone.errors|first }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold text-dark small">{{ form.profile_image.label }}</label>
+                                {{ form.profile_image }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3 shadow-sm">
+                                Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-       {{form.email.label_tag}}
-        {{ form.email }}
-    </div>
-
-    <div class="mb-3">
-        {{form.password.label_tag}}
-        {{ form.password }}
-    </div>
-
-    <div class="mb-3">
-        {{form.address.label_tag}}
-        {{ form.address }}
-    </div>
-
-    <div class="mb-3">
-        {{form.phone.label_tag}}
-        {{ form.phone }}
-    </div>
-
-     <div class="mb-3">
-        {{form.profile_image.label_tag}}
-        {{ form.profile_image }}
-    </div>
-
-<!--        {% if form.non_field_errors %}-->
-<!--        {% for error in form.non_field_errors %}-->
-<!--            <p class="text-danger">{{ error }}</p>-->
-<!--        {% endfor %}-->
-<!--        {% endif %}-->
-    <button type="submit" class="btn btn-primary"> Sign Up</button>
-
-</form>
-{% if form.errors %}
-    <div class="alert alert-danger">
-        {{ form.errors }}
-    </div>
-{% endif %}
+</div>
 {% endblock %}

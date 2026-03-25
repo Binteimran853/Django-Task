@@ -5,7 +5,9 @@ from django.core.exceptions import ValidationError
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-
+    address = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control'}), required=True
+    )
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'profile_image', 'address', 'phone']
@@ -21,6 +23,7 @@ class UserForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+
         }
 
 
@@ -44,6 +47,14 @@ class UserForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)
     password = forms.CharField(widget=forms.PasswordInput)
+    labels = {
+        'Username': 'username',
+        'Password': 'password',
+    }
+    widgets = {
+        'username': forms.TextInput(attrs={'class': 'form-control', }),
+        'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+    }
 
 
 class ProfileForm(forms.ModelForm):
@@ -61,13 +72,8 @@ class ProfileForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
         email = cleaned_data.get('email')
-
         user_id = self.instance.id
-
-        if User.objects.exclude(id=user_id).filter(username=username).exists():
-            raise ValidationError("Username already taken")
 
         if User.objects.exclude(id=user_id).filter(email=email).exists():
             raise ValidationError("Email already registered")
