@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'products',
     'cart',
+    'Order',
     'widget_tweaks',
 ]
 
@@ -143,3 +144,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STRIPE_PUBLISHED_KEY = os.environ.get('STRIPE_PUBLISHED_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
