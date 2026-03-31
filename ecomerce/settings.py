@@ -27,9 +27,15 @@ SECRET_KEY = 'django-insecure-l8l#aj6#+e2gy(ypijsm3&mitv-@16dwn%#5-p)#p2vsd#k#^k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".ngrok-free.app",
+    "127.0.0.1",
+    "localhost",
+]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -146,3 +152,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STRIPE_PUBLISHED_KEY = os.environ.get('STRIPE_PUBLISHED_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET='whsec_d894af8a9522b3dba983fbf3d4c512401c232398f1e2944f4829550c54ff42ab'
