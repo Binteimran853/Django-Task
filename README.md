@@ -14,18 +14,18 @@ Features
 - Template inheritance for DRY code
 
 ## Setup Commands:
-`git clone https://github.com/yourusername/django-ecommerce.git
-cd django-ecommerce`
+- `git clone https://github.com/yourusername/django-ecommerce.git`
+- `cd django-ecommerce`
 
-`python -m venv venv
-source venv/bin/activate  # Mac/Linux
-venv\Scripts\activate     # Windows`
+- `python -m venv venv`
+- `source venv/bin/activate  # Mac/Linux`
+- `venv\Scripts\activate     # Windows`
 
-`pip install -r requirements.txt`
+- `pip install -r requirements.txt`
 
-`python manage.py makemigrations
-python manage.py migrate`
+- `python manage.py makemigrations`
+- `python manage.py migrate`
 
-`python manage.py createsuperuser`
+- `python manage.py createsuperuser`
 
-`python manage.py runserver`
+- `python manage.py runserver`
