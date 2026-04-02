@@ -1,26 +1,25 @@
+import stripe
 from django.conf import settings
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
-import stripe
-
+from cart.models import Cart, CartItem
 from Order.models import Order, OrderItem
-from cart.models import CartItem, Cart
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-@login_required(login_url='login')
+@login_required(login_url="login")
 def check_out(request, cart_id):
     """
-        Creates an order from the user's cart and redirects to Stripe checkout.
+    Creates an order from the user's cart and redirects to Stripe checkout.
     """
-    domain = request.build_absolute_uri('/')  # dynamic base URL
+    domain = request.build_absolute_uri("/")  # dynamic base URL
     cart = Cart.objects.get(pk=cart_id)
     cart_item = CartItem.objects.filter(cart=cart)
-    total_price = sum(item.product.price * item.quantity for item in cart_item )
+    total_price = sum(item.product.price * item.quantity for item in cart_item)
     order = Order.objects.create(user=request.user, total_amount=total_price)
 
     for item in cart_item:
@@ -33,33 +32,36 @@ def check_out(request, cart_id):
 
     line_items = []
     for item in cart_item:
-        line_items.append({
-            'price_data': {
-                'currency': 'usd',
-                'unit_amount': int(item.product.price * 100),
-                'product_data': {
-                    'name': item.product.name,
+        if item.quantity <= 0:
+            continue
+        line_items.append(
+            {
+                "price_data": {
+                    "currency": "usd",
+                    "unit_amount": int(item.product.price * 100),
+                    "product_data": {
+                        "name": item.product.name,
+                    },
                 },
-            },
-            'quantity': item.quantity,
-        })
+                "quantity": item.quantity,
+            }
+        )
 
     checkout_session = stripe.checkout.Session.create(
-            line_items=line_items,
-            mode='payment',
-            customer_email=request.user.email,
-            success_url=f'{domain}success/',
-            cancel_url =f'{domain}cancel/',
-            metadata={
-            'order_id': str(order.id),
-            },
-
-            payment_intent_data={
-            'metadata': {
-                'order_id': str(order.id),
-                'cart_id': str(cart.id),
+        line_items=line_items,
+        mode="payment",
+        customer_email=request.user.email,
+        success_url=f"{domain}success/",
+        cancel_url=f"{domain}cancel/",
+        metadata={
+            "order_id": str(order.id),
+        },
+        payment_intent_data={
+            "metadata": {
+                "order_id": str(order.id),
+                "cart_id": str(cart.id),
             }
-        }
+        },
     )
 
     return redirect(checkout_session.url, code=303)
@@ -68,10 +70,10 @@ def check_out(request, cart_id):
 @csrf_exempt
 def stripe_webhook(request):
     """
-        Handles Stripe webhook events.
+    Handles Stripe webhook events.
     """
     payload = request.body
-    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE', '')
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE", "")
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
     try:
@@ -83,15 +85,15 @@ def stripe_webhook(request):
         print("[ERROR] Invalid Stripe signature")
         return HttpResponse(status=400)
 
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        metadata = session.get('metadata', {})
-        order_id = metadata.get('order_id')
-        cart_id = metadata.get('cart_id')
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        metadata = session.get("metadata", {})
+        order_id = metadata.get("order_id")
+        cart_id = metadata.get("cart_id")
 
         try:
             order = Order.objects.get(id=order_id)
-            order.payment_status = 'Paid'
+            order.payment_status = "Paid"
             order.save()
             try:
                 cart = Cart.objects.get(user=order.user)
@@ -104,14 +106,13 @@ def stripe_webhook(request):
         except Order.DoesNotExist:
             print("Order not found for ID:", order_id)
 
-
-    elif event['type'] == 'payment_intent.payment_failed':
-        intent = event['data']['object']
-        order_id = intent.get('metadata', {}).get('order_id')
+    elif event["type"] == "payment_intent.payment_failed":
+        intent = event["data"]["object"]
+        order_id = intent.get("metadata", {}).get("order_id")
 
         try:
             order = Order.objects.get(id=order_id)
-            order.payment_status = 'Pending'
+            order.payment_status = "Pending"
             order.save()
             print(f"Order {order_id} payment FAILED")
         except Order.DoesNotExist:
@@ -124,9 +125,8 @@ def stripe_webhook(request):
 
 
 def success(request):
-    return render(request, 'success.html')
+    return render(request, "success.html")
 
 
 def cancel(request):
-    return render(request, 'cancel.html')
-
+    return render(request, "cancel.html")

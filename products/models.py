@@ -12,10 +12,13 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='images/products/')
+    image = models.ImageField(upload_to="images/products/")
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=True, blank=True,
-        related_name='products'
+        Category,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="products",
     )
 
     def __str__(self):

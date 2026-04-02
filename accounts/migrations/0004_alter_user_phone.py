@@ -7,13 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_user_address_user_phone_alter_user_profile_image'),
+        ("accounts", "0003_user_address_user_phone_alter_user_profile_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='phone',
-            field=models.CharField(blank=True, max_length=15, null=True, validators=[django.core.validators.RegexValidator(message='Phone number formate must be +999999999 ', regex='^\\+?1?\\d{9,15}$')]),
+            model_name="user",
+            name="phone",
+            field=models.CharField(
+                blank=True,
+                max_length=15,
+                null=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        message="Phone number formate must be +999999999 ",
+                        regex="^\\+?1?\\d{9,15}$",
+                    )
+                ],
+            ),
         ),
     ]
