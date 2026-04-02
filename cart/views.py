@@ -27,11 +27,11 @@ def add_cart(request, pk):
     cart_item, create_cart_item = CartItem.objects.get_or_create(
         cart=cart, product=product
     )
-
+    quantity = int(request.POST.get("quantity", 1))
     if not create_cart_item:
-        cart_item.quantity += 1
+        cart_item.quantity += quantity
     else:
-        cart_item.quantity = 1
+        cart_item.quantity = quantity
 
     cart_item.save()
     messages.success(request, "Items added successfully !!")
