@@ -47,13 +47,35 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "accounts",
     "products",
     "cart",
     "Order",
     "widget_tweaks",
+    'django.contrib.sites',
+    "accounts.apps.AccountsConfig",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+LOGIN_URL = '/user/login/'
+SITE_ID = 1
 
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_UNIQUE_EMAIL = True
+
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
@@ -64,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "ecomerce.urls"
@@ -124,7 +147,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
+     'django.contrib.auth.backends.ModelBackend',
+     'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

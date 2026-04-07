@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+from cart.forms import ShippingAddressForm
 from products.models import Product
 
 from .models import Cart, CartItem
@@ -12,11 +13,31 @@ def user_cart(request):
 
     cart, create_cart = Cart.objects.get_or_create(user=request.user)
     items = CartItem.objects.filter(cart=cart, quantity__gt=0)
-    total_price = sum(item.quantity * item.product.price for item in items)
 
-    return render(
-        request, "cart.html", {"cart": cart, "items": items, "total_price": total_price}
-    )
+    for item in items:
+        item.item_total = item.quantity * item.product.price
+    total_price = sum(item.item_total for item in items)
+
+    if request.method == "POST" and "update_shipping" in request.POST:
+
+        shipping_form = ShippingAddressForm(request.POST, instance=request.user)
+        if shipping_form.is_valid():
+            shipping_form.save()
+            messages.success(request, "Shipping address updated!")
+            return redirect("cart")
+
+    else:
+
+        shipping_form = ShippingAddressForm(instance=request.user)
+
+    context = {
+        "cart": cart,
+        "items": items,
+        "total_price": total_price,
+        "shipping_form": shipping_form,
+    }
+
+    return render(request, "cart.html", context)
 
 
 @login_required(login_url="login")
