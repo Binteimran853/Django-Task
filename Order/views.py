@@ -16,7 +16,7 @@ def check_out(request, cart_id):
     """
     Creates an order from the user's cart and redirects to Stripe checkout.
     """
-    domain = request.build_absolute_uri("/")  # dynamic base URL
+    domain = request.build_absolute_uri("/")
     cart = Cart.objects.get(pk=cart_id)
     cart_item = CartItem.objects.filter(cart=cart)
     total_price = sum(item.product.price * item.quantity for item in cart_item)
