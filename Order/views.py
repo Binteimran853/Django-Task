@@ -47,19 +47,26 @@ def check_out(request, cart_id):
             }
         )
 
+    customer = stripe.Customer.create(
+        email=request.user.email,
+        name=request.user.username,
+    )
+
     checkout_session = stripe.checkout.Session.create(
         line_items=line_items,
         mode="payment",
-        customer_email=request.user.email,
+        customer=customer.id,
         success_url=f"{domain}success/",
         cancel_url=f"{domain}cancel/",
         metadata={
             "order_id": str(order.id),
+            "customer_name": request.user.username,
         },
         payment_intent_data={
             "metadata": {
                 "order_id": str(order.id),
                 "cart_id": str(cart.id),
+
             }
         },
     )
@@ -89,19 +96,24 @@ def stripe_webhook(request):
         session = event["data"]["object"]
         metadata = session.get("metadata", {})
         order_id = metadata.get("order_id")
-        cart_id = metadata.get("cart_id")
-
+        payment_intent_id = session.get("payment_intent")
+        charges = stripe.Charge.list(payment_intent=payment_intent_id, limit=1)
+        receipt_url = charges.data[0].receipt_url if charges.data else None
         try:
             order = Order.objects.get(id=order_id)
             order.payment_status = "Paid"
+            order.receipt_url = receipt_url
             order.save()
+
             try:
                 cart = Cart.objects.get(user=order.user)
                 CartItem.objects.filter(cart=cart).delete()
                 cart.delete()
+
                 print(f"Cart for user {order.user.username} cleared successfully")
             except Cart.DoesNotExist:
                 print(f"No cart found for user {order.user.username}")
+
             print("Order updated successfully")
         except Order.DoesNotExist:
             print("Order not found for ID:", order_id)
@@ -125,8 +137,11 @@ def stripe_webhook(request):
 
 
 def success(request):
-    return render(request, "success.html")
+
+    order = Order.objects.filter(user=request.user).order_by('-id').first()
+    return render(request, "success.html", {"order": order})
 
 
 def cancel(request):
+
     return render(request, "cancel.html")
