@@ -63,6 +63,9 @@ INSTALLED_APPS = [
 
 ]
 
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+MEDIA_URL = "/media/"
+
 LOGIN_URL = '/user/login/'
 SITE_ID = 3
 
@@ -189,8 +192,6 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "/media/"
 # MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
