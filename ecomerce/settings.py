@@ -41,14 +41,15 @@ CSRF_TRUSTED_ORIGINS = [
 
 INSTALLED_APPS = [
     'cloudinary_storage',
-    'django.contrib.staticfiles',
     'cloudinary',
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "products",
     "cart",
     "Order",
@@ -182,9 +183,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
