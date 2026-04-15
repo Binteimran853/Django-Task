@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
 ]
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 LOGIN_URL = '/user/login/'
 SITE_ID = 3
@@ -190,8 +189,8 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_URL = "https://res.cloudinary.com/dpr2jc1o5/"
-# MEDIA_URL = "/media/"
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+MEDIA_URL = "/media/"
 # MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
