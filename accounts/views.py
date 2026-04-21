@@ -14,7 +14,7 @@ def user_register(request):
 
         if form.is_valid():
             user = form.save()
-            # user.backend = 'django.contrib.auth.backends.ModelBackend'
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             next_url = request.GET.get("next")
             print(next_url)
