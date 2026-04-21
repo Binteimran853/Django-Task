@@ -14,11 +14,7 @@ def user_register(request):
 
         if form.is_valid():
             user = form.save()
-            user = authenticate(
-                request,
-                username=form.cleaned_data.get("username"),
-                password=form.cleaned_data.get("password1"),
-            )
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             next_url = request.GET.get("next")
             print(next_url)
@@ -42,7 +38,7 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 next_url = request.GET.get("next")
                 if next_url:
                     return redirect(next_url)
