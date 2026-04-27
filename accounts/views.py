@@ -13,14 +13,14 @@ def user_register(request):
         form = UserForm(request.POST, request.FILES)
 
         if form.is_valid():
-            user = form.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)
+            form.save()
+            # user.backend = 'django.contrib.auth.backends.ModelBackend'
+            # login(request, user)
             next_url = request.GET.get("next")
             print(next_url)
             if next_url:
                 return redirect(next_url)
-            return redirect("home")
+            return redirect("login")
 
     else:
         form = UserForm()

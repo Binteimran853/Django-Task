@@ -47,20 +47,15 @@ def check_out(request, cart_id):
             }
         )
 
-    customer = stripe.Customer.create(
-        email=request.user.email,
-        name=request.user.username,
-    )
 
     checkout_session = stripe.checkout.Session.create(
         line_items=line_items,
         mode="payment",
-        customer=customer.id,
+        customer_email=request.user.email,
         success_url=f"{domain}success/",
         cancel_url=f"{domain}cancel/",
         metadata={
             "order_id": str(order.id),
-            "customer_name": request.user.username,
         },
         payment_intent_data={
             "metadata": {
@@ -100,10 +95,8 @@ def stripe_webhook(request):
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        metadata = session.get("metadata", {})
-        order_id = metadata.get("order_id")
-        customer_name = metadata.get("customer_name")
-        print(customer_name)
+        order_id = session.get("metadata", {}).get("order_id")
+
         shipping = session.get("shipping_details", {})
         address = shipping.get("address", {})
         phone = shipping.get("phone")
