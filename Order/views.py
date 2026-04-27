@@ -102,7 +102,8 @@ def stripe_webhook(request):
         session = event["data"]["object"]
         metadata = session.get("metadata", {})
         order_id = metadata.get("order_id")
-
+        customer_name = metadata.get("customer_name")
+        print(customer_name)
         shipping = session.get("shipping_details", {})
         address = shipping.get("address", {})
         phone = shipping.get("phone")
