@@ -92,25 +92,25 @@
 
             </div>
         </div>
-		<div class="col-md-8">
-    <div class="card p-4 mt-4 shadow-sm">
-        <h4>Shipping Details</h4>
-        <hr>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label>Phone Number</label>
-                {{ shipping_form.phone }}
-            </div>
-            <div class="mb-3">
-                <label>Shipping Address</label>
-                {{ shipping_form.address }}
-            </div>
-            <button type="submit" name="update_shipping" class="btn btn-outline-primary btn-sm">
-                Update Shipping Info
-            </button>
-        </form>
-    </div>
+<!--		<div class="col-md-8">-->
+<!--    <div class="card p-4 mt-4 shadow-sm">-->
+<!--        <h4>Shipping Details</h4>-->
+<!--        <hr>-->
+<!--        <form method="POST">-->
+<!--            {% csrf_token %}-->
+<!--            <div class="mb-3">-->
+<!--                <label>Phone Number</label>-->
+<!--                {{ shipping_form.phone }}-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label>Shipping Address</label>-->
+<!--                {{ shipping_form.address }}-->
+<!--            </div>-->
+<!--            <button type="submit" name="update_shipping" class="btn btn-outline-primary btn-sm">-->
+<!--                Update Shipping Info-->
+<!--            </button>-->
+<!--        </form>-->
+<!--    </div>-->
 </div>
 
     </div>

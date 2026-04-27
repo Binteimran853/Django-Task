@@ -69,6 +69,12 @@ def check_out(request, cart_id):
 
             }
         },
+        shipping_address_collection={
+            "allowed_countries": ["US", "PK"],
+        },
+        phone_number_collection={
+            "enabled": True,
+        },
     )
 
     return redirect(checkout_session.url, code=303)
@@ -96,6 +102,12 @@ def stripe_webhook(request):
         session = event["data"]["object"]
         metadata = session.get("metadata", {})
         order_id = metadata.get("order_id")
+
+        shipping = session.get("shipping_details", {})
+        address = shipping.get("address", {})
+        phone = shipping.get("phone")
+        full_address = f"{address.get('line1', '')}, {address.get('city', '')}, {address.get('country', '')}"
+
         payment_intent_id = session.get("payment_intent")
         charges = stripe.Charge.list(payment_intent=payment_intent_id, limit=1)
         receipt_url = charges.data[0].receipt_url if charges.data else None
@@ -103,6 +115,8 @@ def stripe_webhook(request):
             order = Order.objects.get(id=order_id)
             order.payment_status = "Paid"
             order.receipt_url = receipt_url
+            order.phone = phone
+            order.address = full_address
             order.save()
 
             try:
