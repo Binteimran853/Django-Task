@@ -1,3 +1,4 @@
+# E-Commerce(Django+DRF Based)
 This project is a Django-based E-Commerce platform that allows users to browse products, create accounts, login/logout, manage their profile, and perform other e-commerce operations like adding products to a cart.
 
 The application is designed using Django forms, custom templates, class-based views, and custom user models. Proper exception handling and template inheritance are implemented for a scalable, maintainable codebase
